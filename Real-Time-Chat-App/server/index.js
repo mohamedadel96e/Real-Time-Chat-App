@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import connectDB from './config/db.js';
+import AuthRoutes from './routes/AuthRoutes.js';
 
 dotenv.config();
 
@@ -20,19 +22,12 @@ app.use(cors({
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cookieParser());
+
+connectDB();
+
+app.use('/api/auth', AuthRoutes);
 
 const server = app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
-
-mongoose.connect(databaseURL).then(() => {
-  console.log('Connected to the database');
-}).catch((err) => {
-  console.log('Error connecting to the database');
-  console.log(err);
-});
-
-
-// gsgds
