@@ -6,11 +6,16 @@ import User from "../models/User.js";
 const users = new Map(); // Track online users (userId -> socketId)
 
 const initializeSocket = (server) => {
+    console.log("Initializing socket.io");
     const io = new Server(server, {
-        cors: { origin: "*" },
+        cors: { 
+            origin: "*", 
+            methods: ["GET", "POST"]
+        },
     });
 
     io.on("connection", (socket) => {
+        console.log('any thing');
         console.log("New user connected:", socket.id);
 
         // 1️⃣ User Online/Offline Tracking**
