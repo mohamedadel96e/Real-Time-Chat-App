@@ -1,6 +1,6 @@
 import express from "express";
 import { createGroup, addMember, removeMember, deleteGroup } from "../controllers/groupController.js";
-import {verifyToken} from "../middleware/AuthMiddleware.js";
+import { verifyToken } from "../middlewares/AuthMiddleware.js";
 
 const router = express.Router();
 
