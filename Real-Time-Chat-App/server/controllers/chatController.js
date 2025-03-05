@@ -13,12 +13,28 @@ export const createChat = async (req, res) => {
 
 // Get All Chats for a User
 export const getChats = async (req, res) => {
-    try {
-        const chats = await Chat.find({ members: req.user.id });
-        res.status(200).json(chats);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching chats", error });
-    }
+  try {
+    const userId = req.user.id;
+    const chats = await Chat.find({ members: userId })
+      .populate({
+        path: "members",
+        select: "username profilePic",
+      })
+      .populate({
+        path: "messages",
+        select: "text sender createdAt",
+        options: { sort: { createdAt: -1 }, limit: 1 },
+        populate: {
+          path: "sender",
+          select: "username profilePic",
+        },
+      })
+      .sort({ updatedAt: -1 });
+
+    res.status(200).json(chats);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching chats", error });
+  }
 };
 
 // Delete a Chat
