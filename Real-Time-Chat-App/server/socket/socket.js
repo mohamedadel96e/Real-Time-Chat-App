@@ -13,7 +13,6 @@ const initializeSocket = (server) => {
 
     io.on("connection", (socket) => {
         console.log("New user connected:", socket.id);
-        users.$push(socket.id);
         io.emit("connection", {"Hello": "World"});
         // 1️⃣ User Online/Offline Tracking
         socket.on("user-online", async (userId) => {
@@ -32,7 +31,6 @@ const initializeSocket = (server) => {
         socket.on("send-message", async ({ sender, chatId, text, attachments = [] }) => {
             try {
                 console.log("New message:", { sender, chatId, text, attachments });
-                chatId = new mongoose.Types.inputId(chatId);
                 const newMessage = await Message.create({ sender, chat: chatId, text, attachments });
                 await Chat.findByIdAndUpdate(chatId, { $push: { messages: newMessage._id } });
                 const messageData = await newMessage.populate("sender", "username profilePic");
