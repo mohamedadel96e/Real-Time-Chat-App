@@ -6,7 +6,10 @@ export const sendMessage = async (req, res) => {
     try {
         const { chatId, text, attachments = [] } = req.body;
         const sender = req.user.id;
-        
+        const chat = await Chat.findById(chatId);
+        if (!chat.members.includes(sender)) {
+            return res.status(403).json({ message: "User not part of this chat" });
+        }
         const newMessage = await Message.create({ sender, chat: chatId, text, attachments });
 
         await Chat.findByIdAndUpdate(chatId, { $push: { messages: newMessage._id } });
