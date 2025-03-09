@@ -1,0 +1,181 @@
+{
+  "info": {
+      "name": "Real-Time Chat App",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+      {
+          "name": "Auth - Register",
+          "request": {
+              "method": "POST",
+              "header": [
+                  {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                  }
+              ],
+              "url": {
+                  "raw": "{{base_url}}/api/auth/register",
+                  "host": [
+                      "{{base_url}}"
+                  ],
+                  "path": [
+                      "api",
+                      "auth",
+                      "register"
+                  ]
+              },
+              "body": {
+                  "mode": "raw",
+                  "raw": "{ \"username\": \"testuser\", \"email\": \"test@example.com\", \"password\": \"password123\" }"
+              }
+          }
+      },
+      {
+          "name": "Auth - Login",
+          "request": {
+              "method": "POST",
+              "header": [
+                  {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                  }
+              ],
+              "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": [
+                      "{{base_url}}"
+                  ],
+                  "path": [
+                      "api",
+                      "auth",
+                      "login"
+                  ]
+              },
+              "body": {
+                  "mode": "raw",
+                  "raw": "{ \"email\": \"test@example.com\", \"password\": \"password123\" }"
+              }
+          }
+      },
+      {
+          "name": "User - Get Profile",
+          "request": {
+              "method": "GET",
+              "header": [
+                  {
+                      "key": "Authorization",
+                      "value": "Bearer {{auth_token}}"
+                  }
+              ],
+              "url": {
+                  "raw": "{{base_url}}/api/users/profile",
+                  "host": [
+                      "{{base_url}}"
+                  ],
+                  "path": [
+                      "api",
+                      "users",
+                      "profile"
+                  ]
+              }
+          }
+      },
+      {
+          "name": "Chat - Create Chat",
+          "request": {
+              "method": "POST",
+              "header": [
+                  {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                  },
+                  {
+                      "key": "Authorization",
+                      "value": "Bearer {{auth_token}}"
+                  }
+              ],
+              "url": {
+                  "raw": "{{base_url}}/api/chats",
+                  "host": [
+                      "{{base_url}}"
+                  ],
+                  "path": [
+                      "api",
+                      "chats"
+                  ]
+              },
+              "body": {
+                  "mode": "raw",
+                  "raw": "{ \"name\": \"Test Chat\", \"members\": [\"user_id_1\", \"user_id_2\"] }"
+              }
+          }
+      },
+      {
+          "name": "Message - Send Message",
+          "request": {
+              "method": "POST",
+              "header": [
+                  {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                  },
+                  {
+                      "key": "Authorization",
+                      "value": "Bearer {{auth_token}}"
+                  }
+              ],
+              "url": {
+                  "raw": "{{base_url}}/api/messages",
+                  "host": [
+                      "{{base_url}}"
+                  ],
+                  "path": [
+                      "api",
+                      "messages"
+                  ]
+              },
+              "body": {
+                  "mode": "raw",
+                  "raw": "{ \"chat\": \"chat_id\", \"text\": \"Hello, world!\" }"
+              }
+          }
+      },
+      {
+          "name": "Group - Create Group",
+          "request": {
+              "method": "POST",
+              "header": [
+                  {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                  },
+                  {
+                      "key": "Authorization",
+                      "value": "Bearer {{auth_token}}"
+                  }
+              ],
+              "url": {
+                  "raw": "{{base_url}}/api/groups",
+                  "host": [
+                      "{{base_url}}"
+                  ],
+                  "path": [
+                      "api",
+                      "groups"
+                  ]
+              },
+              "body": {
+                  "mode": "raw",
+                  "raw": "{ \"name\": \"Test Group\", \"members\": [\"user_id_1\", \"user_id_2\"] }"
+              }
+          }
+      }
+  ],
+  "variable": [
+      {
+          "key": "base_url",
+          "value": "http://localhost:5000"
+      }
+  ]
+}

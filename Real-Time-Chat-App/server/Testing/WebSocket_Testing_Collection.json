@@ -1,0 +1,89 @@
+{
+    "info": {
+        "name": "WebSocket Testing",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Connect to WebSocket",
+            "request": {
+                "url": "{{ws_url}}",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "Send Message",
+            "request": {
+                "url": "{{ws_url}}",
+                "method": "POST",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{ \"sender\": \"67c40a06dbcbc1c47587a976d\", \"chatId\": \"67c952d0951710b61d420bcd\", \"text\": \"Hello from Postman!\", \"attachments\": [] }"
+                },
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Send Notification",
+            "request": {
+                "url": "{{ws_url}}",
+                "method": "POST",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{ \"userId\": \"67c40a06dbcbc1c47587a976d\", \"chatId\": \"67c952d0951710b61d420bcd\", \"notification\": \"You have a new message\", \"sender\": \"67c40a06dbcbc1c47587a976d\" }"
+                },
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "User Online",
+            "request": {
+                "url": "{{ws_url}}",
+                "method": "POST",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{ \"userId\": \"67c40a06dbcbc1c47587a976d\" }"
+                },
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "User Offline",
+            "request": {
+                "url": "{{ws_url}}",
+                "method": "POST",
+                "body": {
+                    "mode": "raw",
+                    "raw": "{ \"userId\": \"67c40a06dbcbc1c47587a976d\" }"
+                },
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "ws_url",
+            "value": "ws://localhost:5010"
+        }
+    ]
+}
