@@ -1,23 +1,44 @@
+import express from "express";
+import multer from "multer";
+import upload from "../config/upload.js";
 import Message from "../models/Message.js";
 import Chat from "../models/Chat.js";
-import User from "../models/User.js";
 
-export const sendMessage = async (req, res) => {
+export const sendMessage = (req, res) => {
+  upload.array("file")(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({ error: "Fail Size Is More Than 1MB " });
+      }
+      return res.status(400).json({ error: `Multer Error: ${err.message}` });
+    } else if (err) {
+      return res.status(400).json({ error: `Message: ${err.message}` });
+    }
+
     try {
-        const { chatId, text, attachments = [] } = req.body;
-        const sender = req.user.id;
-        const chat = await Chat.findById(chatId);
-        if (!chat.members.includes(sender)) {
-            return res.status(403).json({ message: "User not part of this chat" });
-        }
-        const newMessage = await Message.create({ sender, chat: chatId, text, attachments });
+      const { chatId, text } = req.body;
+      const senderId = req.user.id; 
+      if (!chatId) {
+        return res.status(400).json({ error: "Input Chat_id" });
+      }
 
-        await Chat.findByIdAndUpdate(chatId, { $push: { messages: newMessage._id } });
-        res.status(201).json(newMessage);
+      const fileUrls = req.files ? req.files.map((file) => file.path) : [];
+
+      const newMessage = new Message({
+        chat: chatId,
+        sender: senderId,
+        text: text || "", 
+        attachments: fileUrls, 
+      });
+
+      await newMessage.save();
+      await Chat.findByIdAndUpdate(chatId, { $push: { messages: newMessage._id } });
+
+      res.json({ message: "File uploaded and message sent successfully!" });
+    } catch (error) {
+      res.status(500).json({Message: "Error in Sending Message", details: error.message });
     }
-    catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+  });
 };
 
 export const getMessages = async (req, res) => {

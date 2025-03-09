@@ -14,8 +14,12 @@ const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
-    const newUser = new User({ username, email, password: hashedPassword });
+    const profilePic = req.file
+    ? req.file.path
+    : "https://res.cloudinary.com/demo/image/upload/v1611324491/default-profile.jpg"
+
+    // Create user  
+    const newUser = new User({ username, email, password: hashedPassword , profilePic});
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully" });
