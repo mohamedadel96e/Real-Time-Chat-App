@@ -39,16 +39,20 @@ export const getUserById = async (req, res) => {
  */
 export const updateUserProfile = async (req, res) => {
     try {
+        
         const user = await User.findById(req.user.id);
 
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        const { username, email, profilePic, status } = req.body;
+        const { username, email,  status } = req.body;
 
         if (username) user.username = username;
         if (email) user.email = email;
-        if (profilePic) user.profilePic = profilePic;
         if (status) user.status = status;
+        const profilePic = req.file
+        ? req.file.path
+        : user.profilePic
+        user.profilePic = profilePic;
 
         await user.save();
         res.json({ message: "Profile updated successfully" });
