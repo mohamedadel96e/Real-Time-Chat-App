@@ -11,7 +11,8 @@ import messageRoutes from "./routes/messageRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import uploadRoutes from "./routes/uploadRoutes.js"
+import uploadRoutes from "./routes/uploadRoutes.js";
+import { swaggerUi, specs } from "./config/swaggerConfig.js";
 
 dotenv.config();
 
@@ -37,13 +38,18 @@ app.use(cookieParser());
 connectDB();
 
 // Define Routes
+app.get("/swagger.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(specs);
+});
 
 app.use('/api/auth', AuthRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/users', userRoutes);
-app.use("/api", uploadRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Start Server
 server.listen(port, () => {
