@@ -1,0 +1,305 @@
+:root {
+  --main-color: rgb(79, 70, 229);
+}
+body{
+  background-color: rgb(15 21 34);
+  color: white;
+}
+.main-color {
+  color: var(--main-color);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+.form-parent {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-child {
+  background-color: rgb(31 41 55);
+  padding: 30px;
+  border-radius: 20px;
+  width: fit-content;
+  text-align: center;
+}
+
+.form-icon {
+  background-color: var(--main-color);
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.form-title {
+  font-size: 30px;
+  font-weight: 900;
+  padding: 0px;
+  margin: 25px 0 10px 0;
+}
+
+.form-parent span {
+  color: rgb(182, 173, 173);
+  font-size: 14px;
+}
+
+.form-parent a {
+  color: rgb(130, 123, 255);
+  margin-left: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.form-parent form>input,
+button {
+  width: 380px;
+  height: 45px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  background-color: rgb(55, 65, 81);
+  border: none;
+  outline: none;
+  display: block;
+  padding-left: 20px;
+  color: white;
+}
+
+.form-parent form input::placeholder {
+  color: rgb(182, 173, 173);
+}
+
+.form-parent form input:focus {
+  border: 2px solid var(--main-color);
+}
+
+.form-parent form button {
+  background-color: var(--main-color);
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+/*//////////////////////////////////////////////////////*/
+/* sider-bar  */
+.side-bar {
+  width: 200px;
+  background-color: rgb(12, 17, 27);
+  height: 100vh;
+  border-right: 1px solid rgba(134, 134, 134, .3);
+  padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: .3s;
+  position: absolute;
+}
+
+.side-bar-child {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  padding: 10px 15px;
+  font-size: 14px;
+}
+
+.closed {
+  width: 50px;
+}
+
+.side-bar-child:hover {
+  background-color: rgb(27, 37, 58);
+}
+
+.side-bar-child>a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+}
+
+.side-bar-child>a span {
+  margin-left: 10px;
+}
+
+.side-bar-child>span {
+  margin-left: 10px;
+}
+
+.closed span {
+  width: 50px;
+  display: none;
+}
+
+/*///////////////////////////////////////////////////////*/
+/* chat-items  */
+.ChatItems {
+  padding-left: 60px;
+  height: 100vh;
+  background-color: rgb(26, 33, 44);
+  width: 330px;
+}
+
+.ChatItems>input {
+  width: 95%;
+  background-color: rgb(12, 17, 27);
+  border: none;
+  outline: none;
+  padding: 7px 10px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--main-color);
+}
+
+.item-child {
+  display: flex;
+  align-items: center;
+  padding: 10px 0px;
+  width: 105%;
+  margin-left: -5%;
+  padding-left: 5%;
+}
+.item-child:hover {
+  background-color: rgb(35, 44, 59);
+}
+
+.item-child img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.item-child p {
+  font-size: 14px;
+  color: gray;
+}
+
+/*/////////////////////////////////////////////*/
+/* chat & call content  */
+.chat-content,
+.call-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.chat-content .start {
+  background-color: rgba(255, 255, 255, .1);
+  padding: 0px 15px 5px 15px;
+  border-radius: 20px;
+}
+.call-content .start{
+  display: flex;
+  gap: 50px;
+}
+.call-content .start >div{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.call-content .start .div-icon {
+  width: 70px;
+  height: 70px;
+  background: rgba(145, 142, 142, .2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  border: 1px solid  rgba(145, 142, 142, .3);
+}
+.call-content .start >div p{
+  font-size: 14px;
+}
+/*/////////////////////////////////////////////*/
+.chat-messages{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.chat-messages .header, .chat-messages .footer{
+  background-color: rgb(26, 33, 44);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 25px;
+  border: 2px solid rgb(15 21 34) ;
+  /* width: 100%; */
+}
+.chat-messages .header .parent-Icon{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.chat-messages .header .parent-Icon .child-icon{
+  background: rgba(189, 187, 187, 0.1);
+  padding: 5px 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  /* border: 1px solid  rgba(145, 142, 142, .3); */
+}
+.chat-messages .footer input{
+width: 100%;
+background-color: transparent;
+border: none;
+outline: 0;
+color: white;
+}
+.chat-messages main{
+  flex: 1;
+  padding: 30px;
+}
+.chat-messages main .message{
+  background-color: rgb(26, 33, 44);
+  width: fit-content;
+  padding: 3px 15px;
+  border-radius: 0 7px 7px 7px;
+  margin: 10px 0px;
+}
+.chat-messages main .receiver .message{
+  border-radius: 7px 0px 7px 7px;
+  margin-left: auto;
+  background-color: var(--main-color);
+}
+/*///////////////////////////////////////////////////////*/
+/* call-info  */
+.call-info{
+  padding: 20px;
+  flex: 1;
+}
+.call-info .header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.call-info .content-title, .call-info .call-date{
+  background-color: rgb(26, 33, 44);
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
+  margin:5px 0px;
+}
+.call-info .content-title .icon{
+  display: flex;
+  gap: 20px;
+}
+.call-info  .call-date{
+  flex-direction: column;
+}
+.call-info  .call-date > p{
+  color: gray;
+  margin: 10px 0px;
+}
