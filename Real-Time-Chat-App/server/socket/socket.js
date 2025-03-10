@@ -8,6 +8,18 @@ const users = new Map(); // Track online users (userId -> socketId)
 
 const notifications = new Map(); // Track unread messages (userId -> count)
 
+/**
+ * @swagger
+ * ws://localhost:5010:
+ *   get:
+ *     summary: WebSocket Connection
+ *     description: Establishes a WebSocket connection for real-time messaging.
+ *     responses:
+ *       101:
+ *         description: WebSocket connection established
+ */
+
+
 const initializeSocket = (server) => {
   console.log("Initializing socket.io");
   console.log(users);
