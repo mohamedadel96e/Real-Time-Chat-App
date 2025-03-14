@@ -50,6 +50,12 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/", (req, res) => {
+  res.json({
+    authors: "backend team",
+    message: "N.O.W"
+  });
+});
 
 // Start Server
 server.listen(port, () => {
