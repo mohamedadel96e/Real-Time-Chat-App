@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20  # Change to your Node.js version
+          node-version: '20.*'  # Change to your Node.js version
 
       - name: Install Dependencies
         run: |
@@ -41,7 +41,8 @@ jobs:
           # key: ${{ secrets.SERVER_SSH_KEY }}
           app-name: 'chatapp-dp'  # Change to your Azure App Service name
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          script: |
-            cd /server
-            git pull origin main
-            npm install
+          package: ./server
+          # script: |
+          #   cd /server
+          #   git pull origin main
+          #   npm install
