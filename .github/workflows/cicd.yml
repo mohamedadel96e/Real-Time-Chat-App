@@ -1,0 +1,47 @@
+name: Deploy Node.js Server
+
+on:
+  push:
+    branches:
+      - main  # Change to your deployment branch if different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20  # Change to your Node.js version
+
+      - name: Install Dependencies
+        run: |
+          cd server
+          npm install
+
+      # - name: Run Tests
+      #   run: |
+      #     cd server
+      #     npm test
+
+      # - name: Build Application (if needed)
+      #   run: |
+      #     cd server
+      #     npm run build  # Remove this step if not applicable
+
+      - name: Deploy to Server
+        uses: azure/webapps-deploy@v2
+        with:
+          # host: ${{ secrets.SERVER_HOST }}
+          # username: ${{ secrets.SERVER_USER }}
+          # key: ${{ secrets.SERVER_SSH_KEY }}
+          app-name: 'chatapp-dp'  # Change to your Azure App Service name
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          script: |
+            cd /server
+            git pull origin main
+            npm install
