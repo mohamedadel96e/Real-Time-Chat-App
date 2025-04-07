@@ -1,7 +1,43 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(15 21 34);
+  color: white;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.scrollable-div::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-div::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.scrollable-div::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+.scrollable-div::-webkit-scrollbar-thumb:hover {
+  background: #6a6a6a;
+}
+
 :root {
   --main-color: rgb(79, 70, 229);
 }
-body{
+body {
   background-color: rgb(15 21 34);
   color: white;
 }
@@ -61,7 +97,7 @@ button {
   font-weight: 500;
 }
 
-.form-parent form>input,
+.form-parent form > input,
 button {
   width: 380px;
   height: 45px;
@@ -95,12 +131,12 @@ button {
   width: 200px;
   background-color: rgb(12, 17, 27);
   height: 100vh;
-  border-right: 1px solid rgba(134, 134, 134, .3);
+  border-right: 1px solid rgba(134, 134, 134, 0.3);
   padding: 30px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: .3s;
+  transition: 0.3s;
   position: absolute;
 }
 
@@ -120,18 +156,18 @@ button {
   background-color: rgb(27, 37, 58);
 }
 
-.side-bar-child>a {
+.side-bar-child > a {
   display: flex;
   align-items: center;
   color: white;
   text-decoration: none;
 }
 
-.side-bar-child>a span {
+.side-bar-child > a span {
   margin-left: 10px;
 }
 
-.side-bar-child>span {
+.side-bar-child > span {
   margin-left: 10px;
 }
 
@@ -149,7 +185,7 @@ button {
   width: 330px;
 }
 
-.ChatItems>input {
+.ChatItems > input {
   width: 95%;
   background-color: rgb(12, 17, 27);
   border: none;
@@ -194,15 +230,15 @@ button {
 }
 
 .chat-content .start {
-  background-color: rgba(255, 255, 255, .1);
+  background-color: rgba(255, 255, 255, 0.1);
   padding: 0px 15px 5px 15px;
   border-radius: 20px;
 }
-.call-content .start{
+.call-content .start {
   display: flex;
   gap: 50px;
 }
-.call-content .start >div{
+.call-content .start > div {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -211,37 +247,38 @@ button {
 .call-content .start .div-icon {
   width: 70px;
   height: 70px;
-  background: rgba(145, 142, 142, .2);
+  background: rgba(145, 142, 142, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 20px;
-  border: 1px solid  rgba(145, 142, 142, .3);
+  border: 1px solid rgba(145, 142, 142, 0.3);
 }
-.call-content .start >div p{
+.call-content .start > div p {
   font-size: 14px;
 }
 /*/////////////////////////////////////////////*/
-.chat-messages{
+.chat-messages {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.chat-messages .header, .chat-messages .footer{
+.chat-messages .header,
+.chat-messages .footer {
   background-color: rgb(26, 33, 44);
   display: flex;
   justify-content: space-between;
   padding: 10px 25px;
-  border: 2px solid rgb(15 21 34) ;
+  border: 2px solid rgb(15 21 34);
   /* width: 100%; */
 }
-.chat-messages .header .parent-Icon{
+.chat-messages .header .parent-Icon {
   display: flex;
   gap: 10px;
   align-items: center;
 }
-.chat-messages .header .parent-Icon .child-icon{
+.chat-messages .header .parent-Icon .child-icon {
   background: rgba(189, 187, 187, 0.1);
   padding: 5px 10px;
   border-radius: 10px;
@@ -249,57 +286,58 @@ button {
   align-items: center;
   /* border: 1px solid  rgba(145, 142, 142, .3); */
 }
-.chat-messages .footer input{
-width: 100%;
-background-color: transparent;
-border: none;
-outline: 0;
-color: white;
+.chat-messages .footer input {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  outline: 0;
+  color: white;
 }
-.chat-messages main{
+.chat-messages main {
   flex: 1;
   padding: 30px;
 }
-.chat-messages main .message{
+.chat-messages main .message {
   background-color: rgb(26, 33, 44);
   width: fit-content;
   padding: 3px 15px;
   border-radius: 0 7px 7px 7px;
   margin: 10px 0px;
 }
-.chat-messages main .receiver .message{
+.chat-messages main .receiver .message {
   border-radius: 7px 0px 7px 7px;
   margin-left: auto;
   background-color: var(--main-color);
 }
 /*///////////////////////////////////////////////////////*/
 /* call-info  */
-.call-info{
+.call-info {
   padding: 20px;
   flex: 1;
 }
-.call-info .header{
+.call-info .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
-.call-info .content-title, .call-info .call-date{
+.call-info .content-title,
+.call-info .call-date {
   background-color: rgb(26, 33, 44);
   padding: 15px 25px;
   display: flex;
   justify-content: space-between;
   border-radius: 5px;
-  margin:5px 0px;
+  margin: 5px 0px;
 }
-.call-info .content-title .icon{
+.call-info .content-title .icon {
   display: flex;
   gap: 20px;
 }
-.call-info  .call-date{
+.call-info .call-date {
   flex-direction: column;
 }
-.call-info  .call-date > p{
+.call-info .call-date > p {
   color: gray;
   margin: 10px 0px;
 }

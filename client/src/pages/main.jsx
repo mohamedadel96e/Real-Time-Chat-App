@@ -4,21 +4,19 @@ import Chat from "../component/chatMessage";
 import ChatContent from "../component/chatsContent";
 import Sidebar from "../component/sidebar";
 
-export default function Main(){
-    const [chatId, setChatId]=useState(null)
+export default function Main() {
+  const [chatId, setChatId] = useState(null);
 
-    return(
-        <>
-           <div style={{display:"flex"}}>
-              <Sidebar/>
-              <ChatItems/>
-              {
-                chatId==null?<ChatContent/>:<Chat/>
-              }
-              
-              {/* <ChatContent/> */}
-              {/* <Chat/> */}
-           </div>
-        </>
-    )
+  return (
+    <>
+      <div style={{ display: "flex" }}>
+        <Sidebar />
+        <ChatItems />
+        {chatId == null ? <ChatContent /> : <Chat />}
+
+        {/* <ChatContent/> */}
+        {/* <Chat/> */}
+      </div>
+    </>
+  );
 }
