@@ -1,19 +1,10 @@
+import { AlignJustify, ArchiveRestore, ChartPie, LockKeyhole, MessageCircleMore, Phone, Settings, Star, UserRoundPen } from "lucide-react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import {
-  AlignJustify,
-  ArchiveRestore,
-  ChartPie,
-  MessageCircleMore,
-  Phone,
-  Settings,
-  Star,
-  UserRoundPen,
-} from "lucide-react";
+import SidebarItem from "./sidebaritem";
 import Configurations from "./Configurations";
 
 export default function Sidebar() {
-  const [isOpened, setIsOpened] = useState(false);
+    const [isOpened, setIsOpened] = useState(false);
   const [activeTab, setActiveTab] = useState("");
   const [showConfigurations, setShowConfigurations] = useState(false);
 
@@ -39,34 +30,30 @@ export default function Sidebar() {
     setActiveTab("");
   }
 
-  return (
-    <div className={`side-bar ${isOpened ? "" : "closed"}`}>
-      <div className="side-bar-child">
-        <AlignJustify onClick={handleToggle} style={{ cursor: "pointer" }} />
-      </div>
+    return (
+        <>
+            <div className={isOpened ? "side-bar" : " side-bar closed"}>
+                <div>
 
-      <div className="side-bar-child">
-        <NavLink to="/main">
-          <MessageCircleMore size={20} />
-          <span>Chats</span>
-        </NavLink>
-      </div>
+                    <SidebarItem>
+                        <AlignJustify onClick={handleToggle} style={{ cursor: "pointer" }} />
+                    </SidebarItem>
 
-      <div className="side-bar-child">
-        <NavLink to="/calls">
-          <Phone size={20} />
-          <span>Call</span>
-        </NavLink>
-      </div>
+                    <SidebarItem path={"/main"} desc={"Chats"}>
+                        <MessageCircleMore size={20} />
+                    </SidebarItem>
 
-      <div className="side-bar-child">
-        <ChartPie size={20} />
-        <span>Status</span>
-      </div>
+                    <SidebarItem path={"/calls"} desc={"Call"}>
+                        <Phone size={20} />
+                    </SidebarItem>
 
-      <hr className="opacity-10 mx-2" />
+                    <SidebarItem desc={"Status"}>
+                        <ChartPie size={20} />
+                    </SidebarItem>
 
-      <div>
+                    <hr style={{ opacity: ".1", margin: "0 10px" }} />
+                </div>
+                <div>
         {sidebarItems.map((item, index) =>
           item.divider ? (
             <hr key={index} className="opacity-10 mx-2" />
@@ -88,6 +75,7 @@ export default function Sidebar() {
       {showConfigurations && (
         <Configurations currentTab={activeTab} onClose={handleClose} />
       )}
-    </div>
-  );
+            </div>
+        </>
+    )
 }
