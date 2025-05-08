@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --main-color: rgb(79, 70, 229);
 }
@@ -147,6 +149,7 @@ button {
   height: 100vh;
   background-color: rgb(26, 33, 44);
   width: 330px;
+  margin-top: -17px;
 }
 
 .ChatItems>input {
@@ -263,9 +266,10 @@ color: white;
 .chat-messages main .message{
   background-color: rgb(26, 33, 44);
   width: fit-content;
-  padding: 3px 15px;
+  padding: 5px 20px;
   border-radius: 0 7px 7px 7px;
-  margin: 10px 0px;
+  margin: 1px 0px;
+  font-size: 14px;
 }
 .chat-messages main .receiver .message{
   border-radius: 7px 0px 7px 7px;
@@ -302,4 +306,28 @@ color: white;
 .call-info  .call-date > p{
   color: gray;
   margin: 10px 0px;
+}
+/*/////////////////Responsive////////////////*/
+@media (max-width:767px) {
+  .ChatItemsOpened{
+
+    flex: 1;
+
+    padding-left: 65px;
+  }
+  .chat-messagesClosed{
+    display: none;
+    
+  }
+}
+@media (max-width:767px) {
+  .chat-messagesOpened{
+
+    flex: 1;
+    margin-left: 50px;
+  }
+  .ChatItemsClosed{
+    display: none;
+    
+  }
 }
