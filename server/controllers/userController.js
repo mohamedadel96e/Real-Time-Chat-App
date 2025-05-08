@@ -1,10 +1,19 @@
 import User from "../models/User.js";
-
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
+export const upload = async (file) => {
+    const result = await cloudinary.uploader.upload(file.path, {
+        folder: "profile_pics",
+    });
+    fs.unlinkSync(file.path); // delete temp file
+    return result;
+};
 /**
  * @desc Get current user profile
  * @route GET /api/users/me
  * @access Private
  */
+
 export const getUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select("-password");
@@ -44,18 +53,21 @@ export const updateUserProfile = async (req, res) => {
 
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        const { username, email,  status } = req.body;
+        const { name, email, about, status } = req.body;
 
-        if (username) user.username = username;
+        if (name) user.name = name;
         if (email) user.email = email;
+        if (about) user.about = about;
         if (status) user.status = status;
-        const profilePic = req.file
-        ? req.file.path
-        : user.profilePic
-        user.profilePic = profilePic;
-
+        if (req.file) {
+            
+            const result = await upload(req.file);
+            
+            user.profilePic = result.url;
+        }
+        
         await user.save();
-        res.json({ message: "Profile updated successfully" });
+        res.json(user);
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
     }

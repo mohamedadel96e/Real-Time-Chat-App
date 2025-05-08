@@ -52,7 +52,7 @@ const router = express.Router();
 
 
 
-router.post("/upload", upload.single("file"), (req, res) => {
+router.post("/", upload.single("file"), (req, res) => {
   try {
     res.json({ imageUrl: req.file.path });
   } catch (error) {

@@ -9,8 +9,22 @@ const verifyToken = (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
-    res.status(400).json({ message: "Invalid Token" });
+    res.status(403).json({ message: "You are unauthorized" });
   }
 };
 
-export {verifyToken};
+
+const guestMethod = (req, res, next) => {
+  const token = req.cookies.token || req.headers["authorization"]?.split(" ")[1];
+  if (token) {
+    try {
+      jwt.verify(token, process.env.JWT_KEY);
+      return res.status(403).json({ message: "Guests only route" });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  next();
+}
+
+export {verifyToken, guestMethod};

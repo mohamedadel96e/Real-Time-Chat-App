@@ -43,7 +43,7 @@ export const sendMessage = (req, res) => {
 
 export const getMessages = async (req, res) => {
   try {
-      const messages = await Message.find({ chat: req.params.chatId }).populate("sender", "username profilePic");
+      const messages = await Message.find({ chat: req.params.chatId }).populate("sender", "name profilePic");
       res.status(200).json(messages);
   } catch (error) {
       res.status(500).json({ message: "Error fetching messages", error });

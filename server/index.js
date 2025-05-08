@@ -21,11 +21,12 @@ const server = http.createServer(app);
 
 const port = process.env.PORT || 5020;
 
-// app.use(cors({
-//     origin: "*", // No need for array
-//     credentials: true
-// }));
-//
+app.use(cors({
+    origin: 'http://localhost:5173', // No need for array
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+}));
+
 
 // Initialize WebSocket
 initializeSocket(server);

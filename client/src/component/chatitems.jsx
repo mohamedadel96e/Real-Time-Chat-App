@@ -1,21 +1,33 @@
 import { useState } from "react";
 import userImg from "../assets/images/user.png";
-import { conversations } from "../data/fakeChatData";
 
-export default function ChatItems({ onSelectChat,classRes }) {
+export default function ChatItems({ conversations = [], onSelectChat, classRes }) {
   const [selectedId, setSelectedId] = useState(null);
-//   const [lastMessage, setLatMessage]=useState("")
-  // إنشاء مصفوفة مختصرة للعرض في القائمة الجانبية
-  const chatList = conversations.map(chat => ({
-    id: chat.id,
-    name: chat.name,
-    // lastMessage: chat.lastMessage,
-    lastMessage:chat.messages?.[chat.messages.length - 1]?.content || "",
-    timestamp: chat.timestamp,
-    unreadCount: chat.unreadCount,
-    isRead: chat.isRead,
-    avatar: chat.avatar || userImg
-  }));
+
+  // Process the API data to match the expected format while keeping your original styling
+  const chatList = conversations.map(chat => {
+    // Get the other member (not admin) for personal chats
+    const user = JSON.parse(localStorage.getItem("user"));
+    const otherMember = chat.members[0]?._id !== user.id
+      ? chat.members[0]
+      : chat.members[1];
+
+    return {
+      id: chat._id,
+      name: chat.name || otherMember?.name || 'Unknown Chat',
+      lastMessage: chat.messages?.[chat.messages.length - 1]?.text || "",
+      timestamp: formatTimestamp(chat.updatedAt),
+      unreadCount: chat.unreadCount || 0,
+      isRead: chat.isRead !== false, // Default to true if not specified
+      avatar: otherMember?.profilePic || userImg
+    };
+  });
+
+  function formatTimestamp(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
 
   const handleSelect = (chat) => {
     setSelectedId(chat.id);
@@ -48,6 +60,10 @@ export default function ChatItems({ onSelectChat,classRes }) {
               src={chat.avatar}
               alt={chat.name}
               style={{ borderRadius: "50%", width: "40px", height: "40px" }}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = userImg;
+              }}
             />
             <div style={{ marginLeft: "15px", flex: 1 }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>

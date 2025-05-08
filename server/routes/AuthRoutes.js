@@ -1,6 +1,6 @@
 import express from 'express';
 import { signup, login, logout } from "../controllers/AuthController.js";
-import { verifyToken } from "../middlewares/AuthMiddleware.js";
+import { verifyToken, guestMethod } from "../middlewares/AuthMiddleware.js";
 const router = express.Router();
 /**
  * @swagger
@@ -41,7 +41,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post("/signup", signup);
+router.post("/signup", guestMethod, signup);
 
 /**
  * @swagger
@@ -69,7 +69,7 @@ router.post("/signup", signup);
  *       500:
  *         description: Internal server error
  */
-router.post("/login", login);
+router.post("/login", guestMethod, login);
 
 /**
  * @swagger
