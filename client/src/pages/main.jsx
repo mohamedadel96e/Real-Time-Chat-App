@@ -71,7 +71,7 @@ export default function Main() {
       <div>
         <ChatItems 
           conversations={conversations} 
-          onSelectChat={(id) => setChatId(id)} 
+          onSelectChat={setChatId} 
           classRes={chatId ? 'ChatItemsClosed' : 'ChatItemsOpened'} 
         />
       </div>
@@ -79,7 +79,11 @@ export default function Main() {
       {chatId == null ? (
         <ChatContent />
       ) : (
-        <Chat id={chatId} classRes={!chatId ? 'chat-messagesClosed' : 'chat-messagesOpened'} />
+        <Chat 
+          id={chatId}
+          chatData={conversations.find(c => c._id === chatId)}
+          classRes={!chatId ? 'chat-messagesClosed' : 'chat-messagesOpened'} 
+        />
       )}
     </div>
   );
