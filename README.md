@@ -75,7 +75,13 @@ cd chat-app
 3. Create a `.env` file in the server root and add the following:
    ```
    PORT=5010
+   ORIGIN=http://localhost:5173
+   JWT_SECRET=your_jwt_secret
+   JWT_EXPIRES_IN=1d
    DATABASE_URL=mongodb+srv://mohamedadel96e:sBQZ6lRROTaiCABS@mychatappdb.jfnf9.mongodb.net/?retryWrites=true&w=majority&appName=myChatAppDB
+   CLOUDINARY_CLOUD_NAME=diibvwaz3
+   CLOUDINARY_API_KEY=977333518845637
+   CLOUDINARY_API_SECRET=6hGq7XS-6zNme--mXYviFORI47c
    ```
 4. Start the server:
    ```bash
