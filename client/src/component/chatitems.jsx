@@ -11,7 +11,6 @@ export default function ChatItems({ conversations = [], onSelectChat, classRes }
     const otherMember = chat.members[0]?._id !== user.id
       ? chat.members[0]
       : chat.members[1];
-
     return {
       id: chat._id,
       name: chat.name || otherMember?.name || 'Unknown Chat',
@@ -59,7 +58,7 @@ export default function ChatItems({ conversations = [], onSelectChat, classRes }
             <img
               src={chat.avatar}
               alt={chat.name}
-              style={{ borderRadius: "50%", width: "40px", height: "40px" }}
+              style={{ borderRadius: "50%", width: "40px", height: "40px", objectFit: "cover" }}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = userImg;
