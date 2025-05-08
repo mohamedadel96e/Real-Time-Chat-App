@@ -1,1 +1,1 @@
-# DEPI-Backend
+# DEPI-Project
