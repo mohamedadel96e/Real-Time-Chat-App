@@ -38,12 +38,12 @@ export default function Configurations({ currentTab, onClose }) {
   const navItems = [
     { name: "General", icon: "majesticons:monitor-line" },
     { name: "Account", icon: "majesticons:key-line" },
-    { name: "Chats", icon: "majesticons:chats-2" },
-    { name: "Video & Voice", icon: "majesticons:video-camera-line" },
+    // { name: "Chats", icon: "majesticons:chats-2" },
+    // { name: "Video & Voice", icon: "majesticons:video-camera-line" },
     { name: "Notifications", icon: "majesticons:bell-line" },
-    { name: "Personalization", icon: "majesticons:edit-pen-4-line" },
-    { name: "Storage", icon: "majesticons:distribute-vertical-line" },
-    { name: "Shortcuts", icon: "majesticons:keyboard-line" },
+    // { name: "Personalization", icon: "majesticons:edit-pen-4-line" },
+    // { name: "Storage", icon: "majesticons:distribute-vertical-line" },
+    // { name: "Shortcuts", icon: "majesticons:keyboard-line" },
     { name: "Help", icon: "majesticons:information-circle-line" },
   ];
 
