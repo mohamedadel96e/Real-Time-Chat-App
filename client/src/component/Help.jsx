@@ -28,7 +28,7 @@ export default function Help() {
         </div>
 
         <div className="text-sm text-gray-500 pt-4 border-t border-gray-700">
-          2025 © Real time chat app Inc.
+          {new Date().getFullYear()} © Real time chat app Inc.
         </div>
       </div>
     </div>
