@@ -38,12 +38,12 @@ export default function Configurations({ currentTab, onClose }) {
   const navItems = [
     { name: "General", icon: "majesticons:monitor-line" },
     { name: "Account", icon: "majesticons:key-line" },
-    { name: "Chats", icon: "majesticons:chats-2" },
-    { name: "Video & Voice", icon: "majesticons:video-camera-line" },
+    // { name: "Chats", icon: "majesticons:chats-2" },
+    // { name: "Video & Voice", icon: "majesticons:video-camera-line" },
     { name: "Notifications", icon: "majesticons:bell-line" },
-    { name: "Personalization", icon: "majesticons:edit-pen-4-line" },
-    { name: "Storage", icon: "majesticons:distribute-vertical-line" },
-    { name: "Shortcuts", icon: "majesticons:keyboard-line" },
+    // { name: "Personalization", icon: "majesticons:edit-pen-4-line" },
+    // { name: "Storage", icon: "majesticons:distribute-vertical-line" },
+    // { name: "Shortcuts", icon: "majesticons:keyboard-line" },
     { name: "Help", icon: "majesticons:information-circle-line" },
   ];
 
@@ -77,7 +77,7 @@ export default function Configurations({ currentTab, onClose }) {
   return (
     <div
       ref={configRef}
-      className="w-[600px] h-[550px] flex flex-row fixed left-16 bottom-3 bg-[#0f1522]/80 backdrop-blur-md shadow-xl border border-[#2a2a2a] rounded-lg z-50 transition-all duration-300"
+      className="w-[600px] h-[400px] flex flex-row fixed left-16 bottom-3 bg-[#0f1522]/80 backdrop-blur-md shadow-xl border border-[#2a2a2a] rounded-lg z-50 transition-all duration-300"
     >
       <div className="w-[180px] h-full flex flex-col justify-between bg-[#0f1522] p-2 rounded-l-lg">
         <div className="flex flex-col gap-3">
