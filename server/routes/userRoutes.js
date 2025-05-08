@@ -7,6 +7,8 @@ import {
     searchUsers,
     deleteUser
 } from "../controllers/userController.js";
+import upload from "../config/upload.js";
+
 
 const router = express.Router();
 
@@ -245,7 +247,7 @@ const router = express.Router();
  */
 router.get("/me", verifyToken, getUserProfile);
 router.get("/:id", verifyToken, getUserById);
-router.put("/me", verifyToken, updateUserProfile);
+router.put("/me", verifyToken, upload.single("profilePic"), updateUserProfile);
 router.get("/search", verifyToken, searchUsers);
 router.delete("/me", verifyToken, deleteUser);
 

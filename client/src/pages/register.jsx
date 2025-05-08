@@ -8,7 +8,7 @@ import Toast from "../component/alert";
 export default function Register() {
   const navigate = useNavigate();
   const [user, setUser] = useState({
-    fullName: "",
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -27,7 +27,7 @@ export default function Register() {
       return;
     }
 
-    if (!user.email.includes("@")) {
+    if (!user.email.includes("@") && !user.email.includes(".")) {
       setAlertData({ type: "error", title: "Invalid Email", description: "Please enter a valid email." });
       return;
     }
@@ -37,22 +37,33 @@ export default function Register() {
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const isEmailExist = users.some((u) => u.email === user.email);
+    // const users = JSON.parse(localStorage.getItem("users")) || [];
+    // const isEmailExist = users.some((u) => u.email === user.email);
 
-    if (isEmailExist) {
-      setAlertData({ type: "error", title: "Email Exists", description: "This email is already registered." });
-      return;
-    }
-
-    const updatedUsers = [...users, user];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-
-    setAlertData({ type: "success", title: "Registered Successfully 🎉", description: "Redirecting to login..." });
-
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
+    fetch("http://localhost:5010/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => {
+        if (response.status !== 201) {
+          return response.json().then((error) => {
+            throw new Error(error.message || "Failed to register");
+          });
+        }
+        return response.json();
+      })
+      .then(() => {
+        setAlertData({ type: "success", title: "Registered Successfully 🎉", description: "Redirecting to login..." });
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      })
+      .catch((error) => {
+        setAlertData({ type: "error", title: "Registration Failed", description: error.message });
+      });
   };
 
   return (
@@ -73,7 +84,7 @@ export default function Register() {
           <Link to={"/login"}>Sign in</Link>
         </div>
         <form onSubmit={handleSubmit}>
-          <Input type="text" name="fullName" placeholder="Full name" value={user.fullName} onChange={handleChange} />
+          <Input type="text" name="name" placeholder="Full name" value={user.name} onChange={handleChange} />
           <Input type="email" name="email" placeholder="Email address" value={user.email} onChange={handleChange} />
           <Input type="password" name="password" placeholder="Password" value={user.password} onChange={handleChange} />
           <Input type="password" name="confirmPassword" placeholder="Confirm password" value={user.confirmPassword} onChange={handleChange} />

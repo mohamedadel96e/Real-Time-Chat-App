@@ -177,7 +177,7 @@ router.post("/", verifyToken, createChat);
 
 
 
-router.get("/", verifyToken, getChats);
+router.get("/", verifyToken, getChats); 
 
 
 router.delete("/:chatId", verifyToken, deleteChat);

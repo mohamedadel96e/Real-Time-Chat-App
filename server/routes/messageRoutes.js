@@ -96,7 +96,8 @@ const router = express.Router();
  *                   type: string
  */
 router.delete("/:messageId", verifyToken, deleteMessage);
-
+router.post("/", verifyToken, sendMessage);
+router.get("/:chatId", verifyToken, getMessages);
 
 router.post("/mark-as-read", verifyToken, markAsRead);
 

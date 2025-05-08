@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const signup = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -19,7 +19,7 @@ const signup = async (req, res) => {
     : "https://res.cloudinary.com/demo/image/upload/v1611324491/default-profile.jpg"
 
     // Create user  
-    const newUser = new User({ username, email, password: hashedPassword , profilePic});
+    const newUser = new User({ name, email, password: hashedPassword , profilePic});
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully" });
@@ -41,6 +41,9 @@ const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if(!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
+    // Update user status to online
+    user.status = "online";
+    await user.save();
     // Create Token
     const token = jwt.sign({ id: user.id}, process.env.JWT_KEY, { expiresIn: process.env.JWT_EXPIRES_IN });
 
@@ -51,7 +54,7 @@ const login = async (req, res) => {
       sameSite: "strict"
     });
 
-    res.json({ message: "User logged in successfully" , token });
+    res.json({ message: "User logged in successfully" , token , user: { id: user._id, name: user.name, email: user.email, profilePic: user.profilePic, status: user.status } });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
