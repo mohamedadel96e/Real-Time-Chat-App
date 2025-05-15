@@ -154,53 +154,6 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/users/{id}:
- *   get:
- *     summary: Get user by ID
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The user ID
- *     responses:
- *       200:
- *         description: The user profile
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 username:
- *                   type: string
- *                 email:
- *                   type: string
- *                 profilePic:
- *                   type: string
- *                 status:
- *                   type: string
- *                 friends:
- *                   type: array
- *                   items:
- *                     type: string
- *                 createdAt:
- *                   type: string
- *                 updatedAt:
- *                   type: string
- *       404:
- *         description: User not found
- *       500:
- *         description: Server error
- */
-
-/**
- * @swagger
  * /api/users/search:
  *   get:
  *     summary: Search users by username or email
@@ -246,9 +199,9 @@ const router = express.Router();
  *         description: Server error
  */
 router.get("/me", verifyToken, getUserProfile);
+router.get("/search", verifyToken, searchUsers);
 router.get("/:id", verifyToken, getUserById);
 router.put("/me", verifyToken, upload.single("profilePic"), updateUserProfile);
-router.get("/search", verifyToken, searchUsers);
 router.delete("/me", verifyToken, deleteUser);
 
 export default router;
