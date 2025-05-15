@@ -70,6 +70,7 @@ function EditableField({
           <p>{value}</p>
         )}
       </div>
+      
       <Icon
         icon="majesticons:edit-pen-2"
         className="w-5 h-5 cursor-pointer hover:opacity-70 transition-all"
