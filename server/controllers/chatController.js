@@ -24,6 +24,7 @@ export const createChat = async (req, res) => {
 
       // Create new chat if no existing chat is found
       const chat = await Chat.create({ name, members, admins: [req.user.id] });
+      await chat.populate("members", "_id name profilePic");
       res.status(201).json(chat);
   } catch (error) {
       res.status(500).json({ message: "Error creating chat", error });  
