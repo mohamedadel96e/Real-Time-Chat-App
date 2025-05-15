@@ -109,7 +109,7 @@ export default function Chat({id, chatData, classRes, setConversations}) {
     };
   }, [id, user.id, setConversations]);
 
-  // Fetch messages from the API
+  // Fetch messages
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -131,7 +131,6 @@ export default function Chat({id, chatData, classRes, setConversations}) {
         }
         const data = await response.json();
         setMessages(data);
-        console.log("messages", data);
       } catch (error) {
         console.error("Error fetching messages:", error);
       } finally {
@@ -208,8 +207,27 @@ export default function Chat({id, chatData, classRes, setConversations}) {
 
   if (!messages.length) {
     return (
-      <div className="chat-messages">
-        No messages found for this chat
+      <div className="chat-messages" style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+          <span style={{ color: '#aaa', fontSize: '18px', textAlign: 'center' }}>No messages found for this chat</span>
+        </div>
+        <footer style={{ width: '100%' }}>
+          <div className="footer">
+            <input
+              value={inputValue}
+              type="text"
+              placeholder="Type a message"
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                handleTyping();
+              }}
+              onKeyDown={handleKeyDown}
+            />
+            <span className="send-button" onClick={handleSendMessage}>
+              <SendHorizonalIcon />
+            </span>
+          </div>
+        </footer>
       </div>
     );
   }
@@ -218,22 +236,11 @@ export default function Chat({id, chatData, classRes, setConversations}) {
     <div className={"chat-messages " + classRes}>
       <header>
         <div className="header">
-          <h2
-            style={{
-              display: "flex",
-              alignItems: "center",
-              fontSize: "16px",
-            }}
-          >
+          <h2 className="chat-header">
             <img
               src={conversations.avatar}
-              style={{
-                width: "30px",
-                height: "30px",
-                borderRadius: "50%",
-                marginRight: "10px",
-                objectFit: "cover",
-              }}
+              alt={conversations.name}
+              className="chat-avatar"
             />
             {conversations.name}
           </h2>
@@ -250,37 +257,27 @@ export default function Chat({id, chatData, classRes, setConversations}) {
           </div>
         </div>
       </header>
-      <main>
+      <main className="messages-container">
         {messages.map((message, index) => (
           <div
-            key={index}
-            className={
-              message.sender._id === user.id ? "receiver" : "sender"
-            }
+            key={message._id}
+            className={message.sender._id === user.id ? "receiver" : "sender"}
           >
             <p className="message">
               {message.text}
-              <span
-                style={{
-                  color: "cyan",
-                  fontSize: "11px",
-                  padding: "0px 5px 5px 10px",
-                }}
-              >
+              <span className="message-time">
                 {formatTimestamp(message.updatedAt)}
               </span>
             </p>
           </div>
         ))}
         
-        {/* Typing indicator */}
         {isTyping && typingUser && (
           <div className="typing-indicator">
             <p>{typingUser} is typing...</p>
           </div>
         )}
         
-        {/* Reference for auto-scrolling */}
         <div ref={messagesEndRef} />
       </main>
       <footer>
@@ -295,7 +292,7 @@ export default function Chat({id, chatData, classRes, setConversations}) {
             }}
             onKeyDown={handleKeyDown}
           />
-          <span style={{cursor: "pointer"}} onClick={handleSendMessage}>
+          <span className="send-button" onClick={handleSendMessage}>
             <SendHorizonalIcon />
           </span>
         </div>

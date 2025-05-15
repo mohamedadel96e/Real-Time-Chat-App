@@ -149,25 +149,25 @@ export default function Main() {
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
-      <div>
+      <div style={{ display: "flex", flex: 1 }}>
         <ChatItems
           conversations={conversations} 
           onSelectChat={setChatId} 
           classRes={chatId ? 'ChatItemsClosed' : 'ChatItemsOpened'} 
           notifications={notifications}
-        />
-      </div>
-    
-      {chatId == null ? (
-        <ChatContent />
-      ) : (
-        <Chat 
-          id={chatId}
-          chatData={conversations.find(c => c._id === chatId)}
-          classRes={!chatId ? 'chat-messagesClosed' : 'chat-messagesOpened'} 
           setConversations={setConversations}
         />
-      )}
+        {chatId == null ? (
+          <ChatContent />
+        ) : (
+          <Chat 
+            id={chatId}
+            chatData={conversations.find(c => c._id === chatId)}
+            classRes={!chatId ? 'chat-messagesClosed' : 'chat-messagesOpened'} 
+            setConversations={setConversations}
+          />
+        )}
+      </div>
     </div>
   );
 }

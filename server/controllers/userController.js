@@ -80,17 +80,31 @@ export const updateUserProfile = async (req, res) => {
  */
 export const searchUsers = async (req, res) => {
     try {
-        const { query } = req.query;
+        const  email  = req.query.email;
+        const currentUserId = req.user._id;
+
+        if (!email) {
+            return res.status(400).json({ message: 'Email query parameter is required' });
+        }
+
+        // Search for users by email, excluding the current user
         const users = await User.find({
-            $or: [
-                { username: { $regex: query, $options: "i" } },
-                { email: { $regex: query, $options: "i" } },
-            ],
-        }).select("-password");
+            email: { $regex: email, $options: 'i' },
+            _id: { $ne: currentUserId }
+        }).select('name email profilePic status');
+
+        // Log the search results for debugging
+        console.log('Search results:', users);
 
         res.json(users);
     } catch (error) {
-        res.status(500).json({ message: "Server error", error });
+        console.error('Search users error:', error);
+        // Send more detailed error information
+        res.status(500).json({ 
+            message: 'Error searching users',
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 };
 

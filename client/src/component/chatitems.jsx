@@ -2,10 +2,14 @@ import { useState, useEffect } from "react";
 import userImg from "../assets/images/user.png";
 import { getSocket } from "../utils/socket";
 
-export default function ChatItems({ conversations = [], onSelectChat, classRes, notifications = [] }) {
+export default function ChatItems({ conversations = [], onSelectChat, classRes, notifications = [], setConversations }) {
   const [selectedId, setSelectedId] = useState(null);
   const [chatList, setChatList] = useState([]);
-  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState(null);
+
   // Process notifications and update unread counts
   useEffect(() => {
     if (notifications.length > 0) {
@@ -47,6 +51,122 @@ export default function ChatItems({ conversations = [], onSelectChat, classRes, 
     
     setChatList(processedChats);
   }, [conversations]);
+
+  // Add debounce function
+  const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
+
+  // Handle search functionality with debo  uncing
+  const handleSearch = async (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      setIsSearching(true);
+      setError(null);
+      const token = localStorage.getItem('token') || 
+                    document.cookie.split('; ')
+                      .find(row => row.startsWith('token='))
+                      ?.split('=')[1];
+
+      if (!token) {
+        throw new Error("Authentication token not found");
+      }
+
+      console.log('Searching for:', query);
+
+      const response = await fetch(`http://localhost:5010/api/users/search?email=${encodeURIComponent(query)}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to search users');
+      }
+
+      const data = await response.json();
+      console.log('Search results:', data);
+      setSearchResults(data);
+    } catch (error) {
+      console.error('Search error:', error);
+      setError(error.message);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Create debounced search function
+  const debouncedSearch = debounce(handleSearch, 300);
+
+  // Create new chat with selected user
+  const createChat = async (userId) => {
+    try {
+      setError(null);
+      const token = localStorage.getItem('token') || 
+                    document.cookie.split('; ')
+                      .find(row => row.startsWith('token='))
+                      ?.split('=')[1];
+
+      if (!token) {
+        throw new Error("Authentication token not found");
+      }
+
+      // Find the selected user from search results
+      const selectedUser = searchResults.find(user => user._id === userId);
+      if (!selectedUser) {
+        throw new Error("Selected user not found");
+      }
+
+      const response = await fetch('http://localhost:5010/api/chats', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ 
+          email: selectedUser.email,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create chat');
+      }
+
+      const chat = await response.json();
+      
+      // Add the new chat to conversations
+      setConversations(prev => [...prev, chat]);
+      
+      // Select the new chat
+      onSelectChat(chat._id);
+      setSearchQuery('');
+      setSearchResults([]);
+    } catch (error) {
+      console.error('Create chat error:', error);
+      setError(error.message);
+    }
+  };
 
   // Listen for user status updates
   useEffect(() => {
@@ -121,77 +241,142 @@ export default function ChatItems({ conversations = [], onSelectChat, classRes, 
       <div>
         <h2 style={{ margin: "20px 0" }}>Chats</h2>
       </div>
-      <input type="search" name="search" placeholder="Search or start new chat" />
-      <div className="item-parent">
-        {chatList.map((chat) => (
-          <div
-            className={`item-child ${selectedId === chat.id ? "active" : ""}`}
-            key={chat.id}
-            onClick={() => handleSelect(chat)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "10px",
-              cursor: "pointer",
-              backgroundColor: selectedId === chat.id ? "#2a2f3a" : "transparent",
-              borderRadius: "10px",
-              marginBottom: "10px",
-            }}
-          >
-            <div style={{ position: "relative" }}>
-              <img
-                src={chat.avatar}
-                alt={chat.name}
-                style={{ borderRadius: "50%", width: "40px", height: "40px", objectFit: "cover" }}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = userImg;
-                }}
-              />
-              {/* Online status indicator */}
-              {chat.status === "online" && (
-                <span 
-                  style={{
-                    position: "absolute",
-                    bottom: "2px",
-                    right: "2px",
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "50%",
-                    backgroundColor: "#4caf50",
-                    border: "1px solid white"
+      <div className="search-container">
+        <input 
+          type="search" 
+          name="search" 
+          placeholder="Search by email..." 
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            debouncedSearch(e);
+          }}
+          style={{ 
+            width: "95%",
+            backgroundColor: "rgb(12, 17, 27)",
+            border: "none",
+            outline: "none",
+            padding: "7px 10px",
+            borderRadius: "3px",
+            marginBottom: "20px",
+            borderBottom: "1px solid var(--main-color)",
+            color: "white"
+          }}
+        />
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
+      </div>
+      
+      {searchQuery ? (
+        <div className="search-results">
+          {isSearching ? (
+            <div className="loading">Searching...</div>
+          ) : searchResults.length > 0 ? (
+            searchResults.map((user) => (
+              <div
+                key={user._id}
+                className="search-result-item"
+                onClick={() => createChat(user._id)}
+              >
+                <img
+                  src={user.profilePic || userImg}
+                  alt={user.name}
+                  className="user-avatar"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = userImg;
                   }}
                 />
-              )}
-            </div>
-            <div style={{ marginLeft: "15px", flex: 1 }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <h4>{chat.name}</h4>
-                <span style={{ fontSize: "12px", color: "#aaa" }}>{chat.timestamp}</span>
+                <div className="user-info">
+                  <h4>{user.name}</h4>
+                  <p>{user.email}</p>
+                  {user.status && (
+                    <span className={`status-indicator ${user.status}`}>
+                      {user.status}
+                    </span>
+                  )}
+                </div>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <p style={{ fontSize: "14px", color: chat.isRead ? "#aaa" : "#fff" }}>
-                  {chat.lastMessage}
-                </p>
-                {chat.unreadCount > 0 && (
-                  <span
+            ))
+          ) : (
+            <div className="no-results">No users found</div>
+          )}
+        </div>
+      ) : (
+        <div className="item-parent">
+          {chatList.map((chat) => (
+            <div
+              className={`item-child ${selectedId === chat.id ? "active" : ""}`}
+              key={chat.id}
+              onClick={() => handleSelect(chat)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "10px",
+                cursor: "pointer",
+                backgroundColor: selectedId === chat.id ? "#2a2f3a" : "transparent",
+                borderRadius: "10px",
+                marginBottom: "10px",
+              }}
+            >
+              <div style={{ position: "relative" }}>
+                <img
+                  src={chat.avatar}
+                  alt={chat.name}
+                  style={{ borderRadius: "50%", width: "40px", height: "40px", objectFit: "cover" }}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = userImg;
+                  }}
+                />
+                {/* Online status indicator */}
+                {chat.status === "online" && (  
+                  <span 
                     style={{
-                      background: "#ff4d4f",
-                      color: "#fff",
+                      position: "absolute",
+                      bottom: "2px",
+                      right: "2px",
+                      width: "10px",
+                      height: "10px",
                       borderRadius: "50%",
-                      fontSize: "12px",
-                      padding: "2px 7px",
-                      marginLeft: "10px",
+                      backgroundColor: "#4caf50",
+                      border: "1px solid white"
                     }}
-                  >
-                    {chat.unreadCount}
-                  </span>
+                  />
                 )}
               </div>
+              <div style={{ marginLeft: "15px", flex: 1 }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <h4>{chat.name}</h4>
+                  <span style={{ fontSize: "12px", color: "#aaa" }}>{chat.timestamp}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <p style={{ fontSize: "14px", color: chat.isRead ? "#aaa" : "#fff" }}>
+                    {chat.lastMessage}
+                  </p>
+                  {chat.unreadCount > 0 && (
+                    <span
+                      style={{
+                        background: "#ff4d4f",
+                        color: "#fff",
+                        borderRadius: "50%",
+                        fontSize: "12px",
+                        padding: "2px 7px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      {chat.unreadCount}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
