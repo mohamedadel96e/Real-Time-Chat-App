@@ -34,18 +34,23 @@ export default function ChatItems({ conversations = [], onSelectChat, classRes, 
     const user = JSON.parse(localStorage.getItem("user"));
     const processedChats = conversations.map(chat => {
       // Get the other member (not current user) for personal chats
-      const otherMember = chat.members[0]?._id !== user.id
-        ? chat.members[0]
-        : chat.members[1];
-      
+      const otherMember = chat.members && chat.members.length > 1
+        ? chat.members.find(m => m._id !== user.id)
+        : null;
+      // Find the last message (if messages are populated as objects)
+      let lastMessage = "";
+      if (Array.isArray(chat.messages) && chat.messages.length > 0) {
+        const lastMsgObj = chat.messages[chat.messages.length - 1];
+        lastMessage = lastMsgObj.text || "";
+      }
       return {
         id: chat._id,
-        name: chat.name || otherMember?.name || 'Unknown Chat',
-        lastMessage: chat.messages?.[chat.messages.length - 1]?.text || "",
+        name: otherMember ? otherMember.name : "",
+        lastMessage,
         timestamp: formatTimestamp(chat.updatedAt),
         unreadCount: chat.unreadCount || 0,
-        isRead: chat.isRead !== false, // Default to true if not specified
-        avatar: otherMember?.profilePic || userImg
+        isRead: chat.isRead !== false,
+        avatar: (otherMember && otherMember.profilePic) ? otherMember.profilePic : userImg
       };
     });
     
