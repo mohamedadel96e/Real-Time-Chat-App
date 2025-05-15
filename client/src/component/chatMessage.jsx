@@ -187,28 +187,7 @@ export default function Chat({id, chatData, classRes, setConversations}) {
     try {
       // Send message both through socket and API
       sendMessage(messageData);
-      
-      // Also send through API for fallback
-      const response = await fetch(
-        `http://localhost:5010/api/messages`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            text: inputValue,
-            chatId: id,
-          }),
-          credentials: "include",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
-
+  
       setInputValue("");
     } catch (error) {
       console.error("Error sending message:", error);

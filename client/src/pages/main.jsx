@@ -17,10 +17,10 @@ export default function Main() {
   // Initialize socket connection when component mounts
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || !user.id) {
-      navigate('/login');
-      return;
-    }
+    // if (!user || !user.id) {
+    //   navigate('/login');
+    //   return;
+    // }
 
     // Initialize socket connection
     const socket = initSocket(user.id);
@@ -150,7 +150,7 @@ export default function Main() {
     <div style={{ display: "flex" }}>
       <Sidebar />
       <div>
-        <ChatItems 
+        <ChatItems
           conversations={conversations} 
           onSelectChat={setChatId} 
           classRes={chatId ? 'ChatItemsClosed' : 'ChatItemsOpened'} 

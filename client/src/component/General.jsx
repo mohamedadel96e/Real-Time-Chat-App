@@ -5,7 +5,13 @@ export default function General() {
   function handleLogoutModal() {
     setLogoutModal(!logoutModal);
   }
-  function handleLogout() {}
+  function handleLogout() {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.href = "/login";
+    
+  }
 
   return (
     <div className="flex flex-col gap-5 h-full w-full rounded-r-lg p-4 overflow-y-auto overflow-x-hidden scrollable-div">

@@ -16,7 +16,7 @@ const signup = async (req, res) => {
 
     const profilePic = req.file
     ? req.file.path
-    : "https://res.cloudinary.com/demo/image/upload/v1611324491/default-profile.jpg"
+    : "https://res.cloudinary.com/dnnyocc5s/image/upload/v1747134558/profile-user-svgrepo-com_lbpuox.jpg"
 
     // Create user  
     const newUser = new User({ name, email, password: hashedPassword , profilePic});

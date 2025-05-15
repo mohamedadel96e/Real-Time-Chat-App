@@ -121,7 +121,7 @@ export default function ChatItems({ conversations = [], onSelectChat, classRes, 
       <div>
         <h2 style={{ margin: "20px 0" }}>Chats</h2>
       </div>
-      <input type="search" placeholder="Search or start new chat" />
+      <input type="search" name="search" placeholder="Search or start new chat" />
       <div className="item-parent">
         {chatList.map((chat) => (
           <div
