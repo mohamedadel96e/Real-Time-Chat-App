@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || "{}"));
+  // const navigate = useNavigate();
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user") || "{}")
+  );
   const [name, setName] = useState(user.name || "");
   const [email, setEmail] = useState(user.email || "");
   const [about, setAbout] = useState(user.about || "No Bio Yet");
@@ -26,10 +28,12 @@ export default function Profile() {
   const updateProfile = async (data) => {
     try {
       setError(null);
-      const token = localStorage.getItem('token') || 
-                    document.cookie.split('; ')
-                      .find(row => row.startsWith('token='))
-                      ?.split('=')[1];
+      const token =
+        localStorage.getItem("token") ||
+        document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          ?.split("=")[1];
 
       if (!token) {
         throw new Error("Authentication token not found");
@@ -38,7 +42,7 @@ export default function Profile() {
       const response = await fetch("http://localhost:5010/api/users/me", {
         method: "PUT",
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         credentials: "include",
@@ -51,12 +55,12 @@ export default function Profile() {
       }
 
       const updatedUser = await response.json();
-      
+
       // Update localStorage with the new user data
       const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
       const newUserData = { ...currentUser, ...updatedUser };
       localStorage.setItem("user", JSON.stringify(newUserData));
-      
+
       // Update local state
       setUser(newUserData);
       return updatedUser;
@@ -87,10 +91,12 @@ export default function Profile() {
       const formData = new FormData();
       formData.append("profilePic", file);
 
-      const token = localStorage.getItem('token') || 
-                    document.cookie.split('; ')
-                      .find(row => row.startsWith('token='))
-                      ?.split('=')[1];
+      const token =
+        localStorage.getItem("token") ||
+        document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          ?.split("=")[1];
 
       if (!token) {
         throw new Error("Authentication token not found");
@@ -99,7 +105,7 @@ export default function Profile() {
       const response = await fetch("http://localhost:5010/api/users/me", {
         method: "PUT",
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         credentials: "include",
         body: formData,
@@ -111,12 +117,12 @@ export default function Profile() {
       }
 
       const updatedUser = await response.json();
-      
+
       // Update localStorage with the new user data
       const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
       const newUserData = { ...currentUser, ...updatedUser };
       localStorage.setItem("user", JSON.stringify(newUserData));
-      
+
       // Update local state
       setUser(newUserData);
     } catch (error) {
@@ -144,29 +150,34 @@ export default function Profile() {
           {error}
         </div>
       )}
-      
+
       <div className="flex flex-col items-center gap-4">
         <div className="relative group">
           <div className="w-28 h-28 rounded-full overflow-hidden ring-4 ring-gray-700 transition-all duration-300 group-hover:ring-blue-500">
             {user.profilePic ? (
-              <img 
-                src={user.profilePic} 
-                alt="Profile" 
+              <img
+                src={user.profilePic}
+                alt="Profile"
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
             ) : (
               <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                <Icon icon={"majesticons:user-circle"} className="w-16 h-16 text-gray-600" />
+                <Icon
+                  icon={"majesticons:user-circle"}
+                  className="w-16 h-16 text-gray-600"
+                />
               </div>
             )}
           </div>
-          <label 
-            htmlFor="photo-upload" 
+          <label
+            htmlFor="photo-upload"
             className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-all duration-300 backdrop-blur-sm"
           >
             <div className="flex flex-col items-center gap-1">
               <Icon icon="majesticons:camera" className="w-6 h-6 text-white" />
-              <span className="text-white text-xs font-medium">Change Photo</span>
+              <span className="text-white text-xs font-medium">
+                Change Photo
+              </span>
             </div>
           </label>
           <input
@@ -187,7 +198,7 @@ export default function Profile() {
             isEditing={isEditingName}
             setIsEditing={setIsEditingName}
             isTitle={true}
-            onSave={() => handleSave('name', name)}
+            onSave={() => handleSave("name", name)}
           />
 
           <EditableField
@@ -196,7 +207,7 @@ export default function Profile() {
             onChange={setEmail}
             isEditing={isEditingEmail}
             setIsEditing={setIsEditingEmail}
-            onSave={() => handleSave('email', email)}
+            onSave={() => handleSave("email", email)}
           />
 
           <EditableField
@@ -205,7 +216,7 @@ export default function Profile() {
             onChange={setAbout}
             isEditing={isEditingAbout}
             setIsEditing={setIsEditingAbout}
-            onSave={() => handleSave('about', about)}
+            onSave={() => handleSave("about", about)}
           />
         </div>
       </div>
@@ -236,7 +247,7 @@ function EditableField({
               onSave?.();
             }}
             onKeyPress={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 setIsEditing(false);
                 onSave?.();
               }

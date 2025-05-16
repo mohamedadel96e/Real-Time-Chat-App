@@ -20,7 +20,7 @@ export const initSocket = (userId) => {
       console.log("Socket disconnected");
     });
   }
-  
+
   return socket;
 };
 

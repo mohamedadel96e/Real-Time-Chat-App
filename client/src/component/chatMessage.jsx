@@ -1,9 +1,16 @@
-import {Phone, Search, SendHorizonalIcon, Video} from "lucide-react";
-import {useState, useEffect, useRef} from "react";
+import { Phone, Search, SendHorizonalIcon, Video } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import userImg from "../assets/images/user.png";
-import { joinChatRoom, markMessagesAsRead, sendMessage, startTyping, stopTyping, getSocket } from "../utils/socket";
+import {
+  joinChatRoom,
+  markMessagesAsRead,
+  sendMessage,
+  startTyping,
+  stopTyping,
+  getSocket,
+} from "../utils/socket";
 
-export default function Chat({id, chatData, classRes, setConversations}) {
+export default function Chat({ id, chatData, classRes, setConversations }) {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,13 +35,12 @@ export default function Chat({id, chatData, classRes, setConversations}) {
     chatData.members[0]?._id !== user.id
       ? chatData.members[0]
       : chatData.members[1];
-  
+
   // Format conversation data
   const conversations = {
     id: chatData._id,
     name: chatData.name || otherMember?.name || "Unknown ChatData",
-    lastMessage:
-      chatData.messages?.[chatData.messages.length - 1]?.text || "",
+    lastMessage: chatData.messages?.[chatData.messages.length - 1]?.text || "",
     timestamp: formatTimestamp(chatData.updatedAt),
     unreadCount: chatData.unreadCount || 0,
     isRead: chatData.isRead !== false, // Default to true if not specified
@@ -60,13 +66,13 @@ export default function Chat({id, chatData, classRes, setConversations}) {
       // Listen for new messages
       socket.on("new-message", (message) => {
         if (message.chat === id) {
-          setMessages(prev => [...prev, message]);
-          
+          setMessages((prev) => [...prev, message]);
+
           // Update the conversations list to reflect the new message
-          setConversations(prev => 
-            prev.map(conv => 
-              conv._id === id 
-                ? {...conv, messages: [...(conv.messages || []), message._id]} 
+          setConversations((prev) =>
+            prev.map((conv) =>
+              conv._id === id
+                ? { ...conv, messages: [...(conv.messages || []), message._id] }
                 : conv
             )
           );
@@ -77,7 +83,9 @@ export default function Chat({id, chatData, classRes, setConversations}) {
       socket.on("typing", ({ userId, chatId }) => {
         if (chatId === id && userId !== user.id) {
           // Find user name
-          const typingUserObj = chatData.members.find(member => member._id === userId);
+          const typingUserObj = chatData.members.find(
+            (member) => member._id === userId
+          );
           setTypingUser(typingUserObj?.name || "Someone");
           setIsTyping(true);
         }
@@ -107,7 +115,7 @@ export default function Chat({id, chatData, classRes, setConversations}) {
         socket.off("update-seen");
       }
     };
-  }, [id, user.id, setConversations]);
+  }, [id, user.id, setConversations, chatData.members]);
 
   // Fetch messages
   useEffect(() => {
@@ -165,7 +173,7 @@ export default function Chat({id, chatData, classRes, setConversations}) {
       setIsTyping(false);
       stopTyping(id, user.id);
     }, 2000);
-    
+
     setTypingTimeoutState(timeout);
   };
 
@@ -186,7 +194,7 @@ export default function Chat({id, chatData, classRes, setConversations}) {
     try {
       // Send message both through socket and API
       sendMessage(messageData);
-  
+
       setInputValue("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -195,7 +203,7 @@ export default function Chat({id, chatData, classRes, setConversations}) {
 
   // Handle keydown event for sending messages
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -207,11 +215,32 @@ export default function Chat({id, chatData, classRes, setConversations}) {
 
   if (!messages.length) {
     return (
-      <div className="chat-messages" style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-          <span style={{ color: '#aaa', fontSize: '18px', textAlign: 'center' }}>No messages found for this chat</span>
+      <div
+        className="chat-messages"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          <span
+            style={{ color: "#aaa", fontSize: "18px", textAlign: "center" }}
+          >
+            No messages found for this chat
+          </span>
         </div>
-        <footer style={{ width: '100%' }}>
+        <footer style={{ width: "100%" }}>
           <div className="footer">
             <input
               value={inputValue}
@@ -258,28 +287,31 @@ export default function Chat({id, chatData, classRes, setConversations}) {
         </div>
       </header>
       <main className="messages-container">
-        {messages.map((message, index) => (
-          <div
-            key={message._id}
-            className={message.sender._id === user.id ? "receiver" : "sender"}
-          >
-            <p className="message">
-              {message.text}
-              <span className="message-time">
-                {formatTimestamp(message.updatedAt)}
-              </span>
-            </p>
-          </div>
-        ))}
-        
+        <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
+          {messages.map((message) => (
+            <div
+              key={message._id}
+              className={message.sender._id === user.id ? "receiver" : "sender"}
+            >
+              <div className="flex justify-center items-center message gap-2 ">
+                <div> {message.text}</div>
+                <div className="w-fit ml-2 self-center mt-5 text-[12px] text-cyan-300">
+                  {formatTimestamp(message.updatedAt)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {isTyping && typingUser && (
           <div className="typing-indicator">
             <p>{typingUser} is typing...</p>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </main>
+
       <footer>
         <div className="footer">
           <input
