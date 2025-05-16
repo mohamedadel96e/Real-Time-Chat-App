@@ -4,7 +4,11 @@ import Chat from "../component/chatMessage";
 import ChatContent from "../component/chatsContent";
 import Sidebar from "../component/sidebar";
 import { useNavigate } from "react-router-dom";
-import { initSocket, disconnectSocket, checkNotifications } from "../utils/socket";
+import {
+  initSocket,
+  disconnectSocket,
+  checkNotifications,
+} from "../utils/socket";
 
 export default function Main() {
   const [chatId, setChatId] = useState(null);
@@ -27,13 +31,13 @@ export default function Main() {
 
     // Listen for new messages and update the conversations
     socket.on("new-message", (message) => {
-      setConversations(prevConversations => {
-        return prevConversations.map(conv => {
+      setConversations((prevConversations) => {
+        return prevConversations.map((conv) => {
           if (conv._id === message.chat) {
             return {
               ...conv,
               messages: [...(conv.messages || []), message._id],
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toISOString(),
             };
           }
           return conv;
@@ -49,9 +53,9 @@ export default function Main() {
     // Listen for notifications
     socket.on("new-notification", (newNotifications) => {
       if (Array.isArray(newNotifications) && newNotifications.length > 0) {
-        setNotifications(prev => [...prev, ...newNotifications]);
-      } else if (newNotifications && typeof newNotifications === 'object') {
-        setNotifications(prev => [...prev, newNotifications]);
+        setNotifications((prev) => [...prev, ...newNotifications]);
+      } else if (newNotifications && typeof newNotifications === "object") {
+        setNotifications((prev) => [...prev, newNotifications]);
       }
     });
 
@@ -62,7 +66,7 @@ export default function Main() {
     return () => {
       disconnectSocket(user.id);
     };
-  }, [navigate]);
+  }, [chatId, navigate]);
 
   // Fetch chats when component mounts
   useEffect(() => {
@@ -70,42 +74,44 @@ export default function Main() {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Get token from localStorage or cookies
-        const token = localStorage.getItem('token') || 
-                      document.cookie.split('; ')
-                        .find(row => row.startsWith('token='))
-                        ?.split('=')[1];
+        const token =
+          localStorage.getItem("token") ||
+          document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="))
+            ?.split("=")[1];
 
         if (!token) {
-          navigate('/login');
+          navigate("/login");
           return;
         }
 
-        const response = await fetch('http://localhost:5010/api/chats', {
-          method: 'GET',
+        const response = await fetch("http://localhost:5010/api/chats", {
+          method: "GET",
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          credentials: 'include'
+          credentials: "include",
         });
 
         // Check if the response is OK (status 200-299)
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Failed to fetch chats');
+          throw new Error(errorData.message || "Failed to fetch chats");
         }
 
         const data = await response.json();
         setConversations(data);
       } catch (error) {
-        console.error('Fetch error:', error);
-        setError(error.message || 'Network error occurred');
-        
+        console.error("Fetch error:", error);
+        setError(error.message || "Network error occurred");
+
         // If it's an authentication error, redirect to login
-        if (error.message.includes('401') || error.message.includes('403')) {
-          navigate('/login');
+        if (error.message.includes("401") || error.message.includes("403")) {
+          navigate("/login");
         }
       } finally {
         setLoading(false);
@@ -119,16 +125,16 @@ export default function Main() {
   useEffect(() => {
     const intervalId = setInterval(async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (!token) return;
 
-        const response = await fetch('http://localhost:5010/api/chats', {
-          method: 'GET',
+        const response = await fetch("http://localhost:5010/api/chats", {
+          method: "GET",
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          credentials: 'include'
+          credentials: "include",
         });
 
         if (response.ok) {
@@ -136,7 +142,7 @@ export default function Main() {
           setConversations(data);
         }
       } catch (error) {
-        console.error('Error refreshing chats:', error);
+        console.error("Error refreshing chats:", error);
       }
     }, 30000); // Refresh every 30 seconds
 
@@ -147,23 +153,23 @@ export default function Main() {
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="flex overflow-x-hidden">
       <Sidebar />
-      <div style={{ display: "flex", flex: 1 }}>
+      <div className="flex flex-1">
         <ChatItems
-          conversations={conversations} 
-          onSelectChat={setChatId} 
-          classRes={chatId ? 'ChatItemsClosed' : 'ChatItemsOpened'} 
+          conversations={conversations}
+          onSelectChat={setChatId}
+          classRes={chatId ? "ChatItemsClosed" : "ChatItemsOpened"}
           notifications={notifications}
           setConversations={setConversations}
         />
         {chatId == null ? (
           <ChatContent />
         ) : (
-          <Chat 
+          <Chat
             id={chatId}
-            chatData={conversations.find(c => c._id === chatId)}
-            classRes={!chatId ? 'chat-messagesClosed' : 'chat-messagesOpened'} 
+            chatData={conversations.find((c) => c._id === chatId)}
+            classRes={!chatId ? "chat-messagesClosed" : "chat-messagesOpened"}
             setConversations={setConversations}
           />
         )}

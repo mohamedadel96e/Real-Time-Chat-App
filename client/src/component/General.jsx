@@ -6,11 +6,24 @@ export default function General() {
     setLogoutModal(!logoutModal);
   }
   function handleLogout() {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location.href = "/login";
-    
+    fetch("http://localhost:5010/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) {
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+          document.cookie =
+            "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          window.location.href = "/login";
+        } else {
+          console.error("Logout failed");
+        }
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+      });
   }
 
   return (
